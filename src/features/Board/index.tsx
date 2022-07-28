@@ -1,30 +1,56 @@
 import "./styles.scss";
 import Square from "./components/Square";
 
+enum Colors {
+  White = 'white',
+  Black = 'black',
+}
+
 export default function Board() {
-  type Letters = Array<string>;
-  type Numbers = Array<number>;
+  const generateFieldMap = (height: number, width: number): Array<Array<any>> => {
+    const rows: Array<any> = [];
+    let isEvenRow: boolean = false;
+    let isEvenColumn: boolean = false;
 
-  const letters: Letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  const numbers: Numbers = [1, 2, 3, 4, 5, 6, 7, 8];    
+    for(let rowIndex = 0; rowIndex < height; rowIndex++) {
+      isEvenRow = !isEvenRow;
+      rows[rowIndex] = [];
 
-  const generateFieldMap = (letters: Letters, numbers: Numbers): Array<Array<any>> => {
-    return numbers.map((number: number) => {
-      return letters.map((letter: string) => ({letter, number}))
-    })
+      for(let columnIndex = 0; columnIndex < width; columnIndex++) {
+        isEvenColumn = !isEvenColumn;
+        let color = Colors.White;
+
+        if(isEvenColumn) {
+          if(isEvenRow) {
+            color = Colors.White;
+          } else {
+            color = Colors.Black;
+          }
+        } else {
+          if(isEvenRow) {
+            color = Colors.Black;
+          } else {
+            color = Colors.White;
+          }
+        }
+  
+        rows[rowIndex][columnIndex] = { row: rowIndex + 1, column: columnIndex + 1, color }; 
+      }
+    }
+    return rows;
   }
 
-  const fieldMap = generateFieldMap(letters, numbers);
+  const fieldMap = generateFieldMap(8, 8);
 
   return (
     <div className="board">
       {fieldMap.map((row) => (
         <div className="row">
-          {row.map(({letter, number}) => 
+          {row.map(({color}) => 
             <Square 
-              color="black" 
-              letter={letter}
-              number={number}
+              color={color}
+              // letter={letter}
+              // number={number}
             />
           )}
         </div>
