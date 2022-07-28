@@ -1,0 +1,22 @@
+$squareSize: 2rem;
+
+.square {
+  position: relative;
+  height: $squareSize;
+  width: $squareSize;
+  background-color: red;
+  box-sizing: content-box;
+  margin: .25rem;
+
+  &__white {
+    background-color: white;
+  }
+  
+  &__black {
+    background-color: black;
+  }
+
+  &__letter {
+    top: 1rem;
+  }
+}
