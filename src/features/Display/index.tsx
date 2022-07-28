@@ -8,7 +8,7 @@ export default function Display() {
   return (
     <div className="display">
       <Board 
-        boardSize={boardSize}
+        size={boardSize}
       />
 
       <div className="display__board-size">

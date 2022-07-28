@@ -1,0 +1,20 @@
+
+.checker {
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: content-box;
+  z-index: 1;
+
+  &__white {
+    background-color: white;
+  }
+  
+  &__black {
+    background-color: rgb(172, 91, 48);
+  }
+
+  &__filler {
+    background-color: #890e0e;
+    z-index: 0;
+  }
+}

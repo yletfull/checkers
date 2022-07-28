@@ -1,12 +1,12 @@
-$squareSize: 5rem;
 
 .square {
   position: relative;
-  height: $squareSize;
-  width: $squareSize;
-  background-color: red;
   border: 1px solid black;
   box-sizing: content-box;
+
+  &__wrapper {
+    position: absolute;
+  }
 
   &__white {
     background-color: white;
@@ -14,9 +14,5 @@ $squareSize: 5rem;
   
   &__black {
     background-color: black;
-  }
-
-  &__letter {
-    top: 1rem;
   }
 }
