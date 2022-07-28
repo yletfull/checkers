@@ -65,6 +65,19 @@ const generateCheckersMap = (fieldMap: FieldMap): CheckersMap => {
     [2, 3, Colors.Black],
     [2, 5, Colors.Black],
     [2, 7, Colors.Black],
+
+    [5, 0, Colors.White],
+    [5, 2, Colors.White],
+    [5, 4, Colors.White],
+    [5, 6, Colors.White],
+    [6, 1, Colors.White],
+    [6, 3, Colors.White],
+    [6, 5, Colors.White],
+    [6, 7, Colors.White],
+    [7, 0, Colors.White],
+    [7, 2, Colors.White],
+    [7, 4, Colors.White],
+    [7, 6, Colors.White],
   ]
   const initialCheckersPosition = initialCheckersSquares.map(([row, column, color]: any) => {
     const {posX, posY} = tmp[row][column];
