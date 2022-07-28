@@ -1,45 +1,51 @@
 import "./styles.scss";
 import Square from "./components/Square";
+import { useState } from "react";
 
 enum Colors {
   White = 'white',
   Black = 'black',
 }
 
-export default function Board() {
-  const generateFieldMap = (height: number, width: number): Array<Array<any>> => {
-    const rows: Array<any> = [];
-    let isEvenRow: boolean = false;
-    let isEvenColumn: boolean = false;
+const generateFieldMap = (height: number, width: number): Array<Array<any>> => {
+  const rows: Array<any> = [];
+  let isEvenRow: boolean = false;
+  let isEvenColumn: boolean = false;
 
-    for(let rowIndex = 0; rowIndex < height; rowIndex++) {
-      isEvenRow = !isEvenRow;
-      rows[rowIndex] = [];
+  for(let rowIndex = 0; rowIndex < height; rowIndex++) {
+    isEvenRow = !isEvenRow;
+    rows[rowIndex] = [];
 
-      for(let columnIndex = 0; columnIndex < width; columnIndex++) {
-        isEvenColumn = !isEvenColumn;
-        let color = Colors.White;
+    for(let columnIndex = 0; columnIndex < width; columnIndex++) {
+      isEvenColumn = !isEvenColumn;
+      let color = Colors.White;
 
-        if(isEvenColumn) {
-          if(isEvenRow) {
-            color = Colors.White;
-          } else {
-            color = Colors.Black;
-          }
+      if(isEvenColumn) {
+        if(isEvenRow) {
+          color = Colors.White;
         } else {
-          if(isEvenRow) {
-            color = Colors.Black;
-          } else {
-            color = Colors.White;
-          }
+          color = Colors.Black;
         }
-  
-        rows[rowIndex][columnIndex] = { row: rowIndex + 1, column: columnIndex + 1, color }; 
+      } else {
+        if(isEvenRow) {
+          color = Colors.Black;
+        } else {
+          color = Colors.White;
+        }
       }
-    }
-    return rows;
-  }
 
+      rows[rowIndex][columnIndex] = { row: rowIndex + 1, column: columnIndex + 1, color }; 
+    }
+  }
+  return rows;
+}
+
+interface BoardProps {
+  boardSize: number,
+}
+
+export default function Board(props: BoardProps) {
+  const { boardSize } = props;
   const fieldMap = generateFieldMap(8, 8);
 
   return (
@@ -49,8 +55,7 @@ export default function Board() {
           {row.map(({color}) => 
             <Square 
               color={color}
-              // letter={letter}
-              // number={number}
+              size={boardSize}
             />
           )}
         </div>
