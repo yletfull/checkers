@@ -19,7 +19,7 @@ export default function Display() {
           min={30}
           max={90}
           value={boardSize}
-          step={10}
+          step={1}
           onChange={(e) => setBorderSize(Number(e.currentTarget.value))}
         />
       </div>

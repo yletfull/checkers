@@ -1,20 +1,15 @@
 
 .checker {
-  position: absolute;
   border-radius: 50%;
   box-sizing: content-box;
   z-index: 1;
-
+  position: absolute;
+  
   &__white {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
   }
   
   &__black {
     background-color: rgb(172, 91, 48);
-  }
-
-  &__filler {
-    background-color: #c7c7c7;
-    z-index: 0;
   }
 }
