@@ -2,6 +2,7 @@ import "./styles.scss";
 import Square from "./components/Square";
 import React, { useEffect, useState } from "react";
 import Checker from "./components/Checker";
+import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
 
 enum Colors {
   White = 'white',
@@ -39,8 +40,8 @@ const generateFieldMap = (height: number, width: number, size: number): FieldMap
       }
 
       rows[rowIndex][columnIndex] = {
-        posX: size / 2 + columnIndex * size,
-        posY: size / 2 + rowIndex * size,
+        posX: getPosXByColumnIndex({size, columnIndex}),
+        posY: getPosYByRowIndex({size, rowIndex}),
         row: rowIndex + 1,
         column: columnIndex + 1,
         color 

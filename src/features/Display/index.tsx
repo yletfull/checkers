@@ -3,7 +3,7 @@ import { useState } from "react";
 import Board from "../Board";
 
 export default function Display() {
-  const [boardSize, setBorderSize] = useState(60);
+  const [boardSize, setBorderSize] = useState(90);
 
   return (
     <div className="display">
