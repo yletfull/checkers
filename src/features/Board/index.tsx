@@ -1,6 +1,6 @@
 import "./styles.scss";
 import Square from "./components/Square";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Checker from "./components/Checker";
 
 enum Colors {
@@ -103,9 +103,12 @@ export default function Board(props: BoardProps) {
   }, [size])
 
   return (
-    <div className="board">
+    <div 
+      className="board"
+      style={{height: size * 9, width: size * 9}}
+    >
       {fieldMap.map((row) => (
-        <div className="row">
+        <React.Fragment>
           {row.map(({color, posX, posY}: any) => 
             <Square 
               posX={posX}
@@ -115,7 +118,7 @@ export default function Board(props: BoardProps) {
               key={`${posX}_${posY}`}
             />
           )}
-        </div>
+        </React.Fragment>
       ))}
       {checkersMap.map(({color, posX, posY}: any) => (
         <Checker 
