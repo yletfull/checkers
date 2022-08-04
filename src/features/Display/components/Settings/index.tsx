@@ -1,6 +1,5 @@
 import "./styles.scss";
 import { useState } from "react";
-import Board from "../../../Board";
 import { useTypeSelector } from "../../../../hooks/useTypeSelector";
 import { useActions } from "../../../../hooks/useActions";
 import { Options } from "../../../../types/options";

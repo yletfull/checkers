@@ -1,13 +1,19 @@
 export enum CheckersActionTypes {
     SET_SELECTED_CHECKER = 'SET_SELECTED_CHECKER',
+    SET_SELECTED_SQUARE = 'SET_SELECTED_SQUARE'
 }
 
 export interface Checker {
     domEl?: HTMLElement | null,
 }
 
+export interface Square {
+    domEl?: HTMLElement | null,
+}
+
 export interface CheckersState {
     selectedChecker: Checker,
+    selectedSquare: Square,
 }
 
 interface SetSelectedCheckerAction {
@@ -15,4 +21,9 @@ interface SetSelectedCheckerAction {
     payload: Checker,
 }
 
-export type CheckerAction = SetSelectedCheckerAction
+interface SetSelectedSquareAction {
+    type: CheckersActionTypes.SET_SELECTED_SQUARE,
+    payload: Square,
+}
+
+export type CheckerAction = SetSelectedCheckerAction | SetSelectedSquareAction;

@@ -1,3 +1,4 @@
+import { useActions } from "../../../../hooks/useActions";
 import "./styles.scss";
 
 type SquareProps = {
@@ -12,9 +13,13 @@ type SquareProps = {
 export default function Square(props: SquareProps) {
   const { color, letter, number, size, posX, posY } = props;
 
+  const {
+    setSelectedSquare,
+  } = useActions();
+
   const handleDragOver = (e: any) => {
     e.preventDefault();
-    // console.log(e.target, e.currentTarget, 'over');
+    setSelectedSquare({ domEl: e.currentTarget })
   }
 
   return (
@@ -22,7 +27,7 @@ export default function Square(props: SquareProps) {
       className="square__wrapper" 
       onDragOver={handleDragOver}
       style={{left: posX, top: posY}}
-      data-pox-x={posX}
+      data-pos-x={posX}
       data-pos-y={posY}
     >
       <div className="square__letter">{letter}</div>

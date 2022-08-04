@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
 import { useActions } from "../../../../hooks/useActions";
 import { useTypeSelector } from "../../../../hooks/useTypeSelector";
 import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
@@ -27,6 +28,10 @@ export default function Checker(props: SquareProps) {
     setSelectedChecker,
   } = useActions();
 
+  const {
+    selectedSquare,
+  } = useTypeSelector((state) => state.checkers);
+
   const handleDragStart = (e: any) => {
     setSelectedChecker({ domEl: e.target })
     e.target.style.filter = 'opacity(.5)';
@@ -35,10 +40,12 @@ export default function Checker(props: SquareProps) {
   const handleDragEnd = (e: any) => {
     e.target.style.filter = 'opacity(1)';
 
-    console.log(e);
+    const el: any = selectedSquare.domEl;
+    const posX = Number(el.dataset.posX);
+    const posY = Number(el.dataset.posY);
   
-    setCurrentXPosition(e.screenX);
-    setCurrentYPosition(e.screenY - height);
+    setCurrentXPosition(posX);
+    setCurrentYPosition(posY);
 
     setSelectedChecker({
       domEl: null,

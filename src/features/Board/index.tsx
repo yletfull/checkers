@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Checker from "./components/Checker";
 import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
-import { Options, OptionsState } from "../../types/options";
+import { OptionsState } from "../../types/options";
 
 enum Colors {
   White = 'white',
