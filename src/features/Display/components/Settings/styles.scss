@@ -1,0 +1,9 @@
+.display {
+  &__board-size {
+    margin-top: 2rem;
+    display: flex;
+    border: thin solid black;
+    padding: 1rem;
+    flex-direction: column;
+  }
+}

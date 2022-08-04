@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useActions } from "../../../../hooks/useActions";
 import { useTypeSelector } from "../../../../hooks/useTypeSelector";
 import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
@@ -14,17 +14,18 @@ type SquareProps = {
 export default function Checker(props: SquareProps) {
   const { color, size, posX, posY } = props;
 
-  const row = getRowIndexByPosY({size, posY});
-  const column = getColumnIndexByPosX({size, posX});
+  const [currentXPosition, setCurrentXPosition] = useState(posX);
+  const [currentYPosition, setCurrentYPosition] = useState(posY);
+
+  const row = getRowIndexByPosY({size, posY: currentYPosition});
+  const column = getColumnIndexByPosX({size, posX: currentXPosition});
+  const width = size / 3;
+  const height = size / 3;
+  const border = size / 10; 
 
   const {
     setSelectedChecker,
   } = useActions();
-
-  const {
-    selectedChecker
-  } = useTypeSelector((state) => state.checkers)
-
 
   const handleDragStart = (e: any) => {
     setSelectedChecker({ domEl: e.target })
@@ -33,6 +34,12 @@ export default function Checker(props: SquareProps) {
 
   const handleDragEnd = (e: any) => {
     e.target.style.filter = 'opacity(1)';
+
+    console.log(e);
+  
+    setCurrentXPosition(e.screenX);
+    setCurrentYPosition(e.screenY - height);
+
     setSelectedChecker({
       domEl: null,
     });
@@ -43,7 +50,6 @@ export default function Checker(props: SquareProps) {
 
   const handleDragOver = (e: any) => {
     e.preventDefault();
-    console.log(e.target, 'over');
   }
 
   const handleDrop = (e: any) => {
@@ -60,14 +66,14 @@ export default function Checker(props: SquareProps) {
         draggable
         className={`checker checker__${color}`} 
         style={{ 
-          left: posX + (size / 3) / 2 - size / 10, 
-          top: posY + (size / 3) / 2 - size / 10, 
-          width: size - size / 3, 
-          height: size - size / 3, 
-          border: `${size / 10}px solid #c7c7c7`
+          left: currentXPosition + width / 2 - border, 
+          top: currentYPosition + height / 2 - border, 
+          width: size - width, 
+          height: size - height, 
+          border: `${border}px solid #c7c7c7`
         }}
-        data-pos-x={posX}
-        data-pos-y={posY}
+        data-pos-x={currentXPosition}
+        data-pos-y={currentYPosition}
         data-row={row}
         data-column={column}
       />

@@ -3,6 +3,8 @@ import Square from "./components/Square";
 import React, { useEffect, useState } from "react";
 import Checker from "./components/Checker";
 import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
+import { useTypeSelector } from "../../hooks/useTypeSelector";
+import { Options, OptionsState } from "../../types/options";
 
 enum Colors {
   White = 'white',
@@ -87,12 +89,9 @@ const generateCheckersMap = (fieldMap: FieldMap): CheckersMap => {
   return initialCheckersPosition;
 }
 
-interface BoardProps {
-  size: number,
-}
+export default function Board() {
+  const { size = 0 }: OptionsState = useTypeSelector((state) => state.options)
 
-export default function Board(props: BoardProps) {
-  const { size } = props;
   const [fieldMap, setFieldMap] = useState<FieldMap>([[]]);
   const [checkersMap, setCheckersMap] = useState<CheckersMap>([[]]);
 

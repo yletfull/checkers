@@ -14,7 +14,7 @@ export default function Square(props: SquareProps) {
 
   const handleDragOver = (e: any) => {
     e.preventDefault();
-    console.log(e.target, e.currentTarget, 'over');
+    // console.log(e.target, e.currentTarget, 'over');
   }
 
   return (
@@ -22,6 +22,8 @@ export default function Square(props: SquareProps) {
       className="square__wrapper" 
       onDragOver={handleDragOver}
       style={{left: posX, top: posY}}
+      data-pox-x={posX}
+      data-pos-y={posY}
     >
       <div className="square__letter">{letter}</div>
       <div className="square__number">{number}</div>
