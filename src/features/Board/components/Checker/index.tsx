@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useActions } from "../../../../hooks/useActions";
 import { useTypeSelector } from "../../../../hooks/useTypeSelector";
-import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
+import { getColumnIndexByPosX, getPosXByColumnIndex, getPosYByRowIndex, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
 import "./styles.scss";
 
 type SquareProps = {
@@ -43,9 +43,16 @@ export default function Checker(props: SquareProps) {
     const el: any = selectedSquare.domEl;
     const posX = Number(el.dataset.posX);
     const posY = Number(el.dataset.posY);
-  
-    setCurrentXPosition(posX);
-    setCurrentYPosition(posY);
+    const targetRow = getRowIndexByPosY({ size, posY })
+    const targetColumn = getColumnIndexByPosX({ size, posX })
+
+    const rowDelta = targetRow - row;
+    const columnDelta = targetColumn - column;
+    
+    if((rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1)) {
+      setCurrentXPosition(posX);
+      setCurrentYPosition(posY);
+    }
 
     setSelectedChecker({
       domEl: null,
