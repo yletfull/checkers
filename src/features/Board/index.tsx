@@ -1,10 +1,11 @@
 import "./styles.scss";
 import Square from "./components/Square";
-import React, { useEffect, useState } from "react";
-import Checker from "./components/Checker";
+import React, { useEffect, useRef, useState } from "react";
 import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { OptionsState } from "../../types/options";
+import { Checker as CheckerI, Square as SquareI } from "../../types/checkers";
+import Checker from "./components/Checker";
 
 enum Colors {
   White = 'white',
@@ -94,6 +95,14 @@ export default function Board() {
 
   const [fieldMap, setFieldMap] = useState<FieldMap>([[]]);
   const [checkersMap, setCheckersMap] = useState<CheckersMap>([[]]);
+  const [selectedSquare, setSelectedSquare] = useState<SquareI>({});
+
+  let movedCheckers: any = useRef([]); // todo
+  const setMovedCheckers = (value: any) => {
+    const tmp = JSON.parse(JSON.stringify(movedCheckers.current));
+    movedCheckers.current = value;
+    return tmp;
+  }
 
   useEffect(() => {
     const fieldMap: FieldMap = generateFieldMap(8, 8, size);
@@ -116,6 +125,7 @@ export default function Board() {
               color={color}
               size={size}
               key={`${posX}_${posY}`}
+              setSelectedSquare={setSelectedSquare}
             />
           )}
         </React.Fragment>
@@ -127,6 +137,9 @@ export default function Board() {
           color={color}
           size={size}
           key={`${posX}_${posY}`}
+          selectedSquare={selectedSquare}
+          movedCheckers={movedCheckers.current}
+          setMovedCheckers={setMovedCheckers}
         />
       ))}
     </div>

@@ -1,7 +1,7 @@
 import { OptionsAction, OptionsActionsTypes, OptionsState } from '../../types/options';
 
 const initialState: OptionsState = {
-    size: 0,
+    size: 50,
 }
 
 export function OptionsReducer (state = initialState, action: OptionsAction): OptionsState {

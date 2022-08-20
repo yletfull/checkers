@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { useActions } from "../../../../hooks/useActions";
-import { useTypeSelector } from "../../../../hooks/useTypeSelector";
-import { getColumnIndexByPosX, getPosXByColumnIndex, getPosYByRowIndex, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
+import { useRef, useState } from "react";
+import { Checker as CheckerI } from "../../../../types/checkers";
+import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
 import "./styles.scss";
 
 type SquareProps = {
@@ -10,13 +8,17 @@ type SquareProps = {
   posX: number,
   posY: number,
   size: number;
+  selectedSquare: any,
+  setMovedCheckers: Function,
+  movedCheckers: Array<CheckerI>
 };
 
 export default function Checker(props: SquareProps) {
-  const { color, size, posX, posY } = props;
+  const { color, size, posX, posY, selectedSquare, setMovedCheckers, movedCheckers } = props;
 
   const [currentXPosition, setCurrentXPosition] = useState(posX);
   const [currentYPosition, setCurrentYPosition] = useState(posY);
+  const currentChecker = useRef(null);
 
   const row = getRowIndexByPosY({size, posY: currentYPosition});
   const column = getColumnIndexByPosX({size, posX: currentXPosition});
@@ -24,16 +26,7 @@ export default function Checker(props: SquareProps) {
   const height = size / 3;
   const border = size / 10; 
 
-  const {
-    setSelectedChecker,
-  } = useActions();
-
-  const {
-    selectedSquare,
-  } = useTypeSelector((state) => state.checkers);
-
   const handleDragStart = (e: any) => {
-    setSelectedChecker({ domEl: e.target })
     e.target.style.filter = 'opacity(.5)';
   }
 
@@ -49,17 +42,20 @@ export default function Checker(props: SquareProps) {
     const rowDelta = targetRow - row;
     const columnDelta = targetColumn - column;
     
-    if((rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1)) {
+    if((rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1) && !el.dataset.checkerId) {
       setCurrentXPosition(posX);
       setCurrentYPosition(posY);
+      setMovedCheckers((prev: Array<CheckerI>) => prev.length ? [...prev, { domEl: currentChecker.current }] : [{ domEl: currentChecker.current }]);
+      el.dataset.checkerId = movedCheckers.length === 0 ? 0 : movedCheckers.length;
     }
 
-    setSelectedChecker({
-      domEl: null,
-    });
   }
 
   const handleDragLeave = (e: any) => {
+    const el: any = selectedSquare.domEl;
+    const findedElIndex = movedCheckers.findIndex((check: any) => el.dataset.posX === check.domEl.dataset.posX)
+    setMovedCheckers((prev: any) => prev.map((_: HTMLElement, index: number) => index !== findedElIndex))
+    el.removeAttribute('data-checker-id');
   }
 
   const handleDragOver = (e: any) => {
@@ -90,6 +86,7 @@ export default function Checker(props: SquareProps) {
         data-pos-y={currentYPosition}
         data-row={row}
         data-column={column}
+        ref={currentChecker}
       />
 );
 }
