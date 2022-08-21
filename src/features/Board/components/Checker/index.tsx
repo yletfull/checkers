@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import { Checker as CheckerI } from "../../../../types/checkers";
+import { useRef, } from "react";
 import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
 import "./styles.scss";
 
@@ -7,17 +6,26 @@ type SquareProps = {
   color: string;
   posX: number,
   posY: number,
+  id: string,
   size: number;
   selectedSquare: any,
-  setMovedCheckers: Function,
-  movedCheckers: Array<CheckerI>
+  onCheckerMove: Function,
 };
 
 export default function Checker(props: SquareProps) {
-  const { color, size, posX, posY, selectedSquare, setMovedCheckers, movedCheckers } = props;
+  const { 
+    color,
+    size,
+    posX,
+    posY,
+    id,
+    selectedSquare,
+    onCheckerMove
+  } = props;
 
-  const [currentXPosition, setCurrentXPosition] = useState(posX);
-  const [currentYPosition, setCurrentYPosition] = useState(posY);
+
+  const currentXPosition = posX;
+  const currentYPosition = posY;
   const currentChecker = useRef(null);
 
   const row = getRowIndexByPosY({size, posY: currentYPosition});
@@ -36,6 +44,7 @@ export default function Checker(props: SquareProps) {
     const el: any = selectedSquare.domEl;
     const posX = Number(el.dataset.posX);
     const posY = Number(el.dataset.posY);
+
     const targetRow = getRowIndexByPosY({ size, posY })
     const targetColumn = getColumnIndexByPosX({ size, posX })
 
@@ -43,18 +52,12 @@ export default function Checker(props: SquareProps) {
     const columnDelta = targetColumn - column;
     
     if((rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1) && !el.dataset.checkerId) {
-      setCurrentXPosition(posX);
-      setCurrentYPosition(posY);
-      setMovedCheckers((prev: Array<CheckerI>) => prev.length ? [...prev, { domEl: currentChecker.current }] : [{ domEl: currentChecker.current }]);
-      el.dataset.checkerId = movedCheckers.length === 0 ? 0 : movedCheckers.length;
+      onCheckerMove({ posX, posY, id });
     }
-
   }
 
   const handleDragLeave = (e: any) => {
     const el: any = selectedSquare.domEl;
-    const findedElIndex = movedCheckers.findIndex((check: any) => el.dataset.posX === check.domEl.dataset.posX)
-    setMovedCheckers((prev: any) => prev.map((_: HTMLElement, index: number) => index !== findedElIndex))
     el.removeAttribute('data-checker-id');
   }
 
@@ -86,6 +89,7 @@ export default function Checker(props: SquareProps) {
         data-pos-y={currentYPosition}
         data-row={row}
         data-column={column}
+        data-id={id}
         ref={currentChecker}
       />
 );

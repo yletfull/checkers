@@ -4,6 +4,7 @@
   box-sizing: content-box;
   z-index: 1;
   position: absolute;
+  transition: top 0.5s ease-in-out, left 0.5s ease-in-out;
 
   &__white {
     background-color: rgb(255, 255, 255);

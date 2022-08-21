@@ -4,13 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { OptionsState } from "../../types/options";
-import { Checker as CheckerI, Square as SquareI } from "../../types/checkers";
+import { Checker as CheckerI, Square as SquareI, CheckersColors, CheckersMapItemI } from "../../types/checkers";
 import Checker from "./components/Checker";
-
-enum Colors {
-  White = 'white',
-  Black = 'black',
-}
 
 type FieldMap = Array<Array<any>>;
 type CheckersMap = Array<object>;
@@ -26,19 +21,19 @@ const generateFieldMap = (height: number, width: number, size: number): FieldMap
 
     for(let columnIndex = 0; columnIndex < width; columnIndex++) {
       isEvenColumn = !isEvenColumn;
-      let color = Colors.White;
+      let color = CheckersColors.White;
 
       if(isEvenColumn) {
         if(isEvenRow) {
-          color = Colors.White;
+          color = CheckersColors.White;
         } else {
-          color = Colors.Black;
+          color = CheckersColors.Black;
         }
       } else {
         if(isEvenRow) {
-          color = Colors.Black;
+          color = CheckersColors.Black;
         } else {
-          color = Colors.White;
+          color = CheckersColors.White;
         }
       }
 
@@ -57,35 +52,37 @@ const generateFieldMap = (height: number, width: number, size: number): FieldMap
 const generateCheckersMap = (fieldMap: FieldMap): CheckersMap => {
   const tmp = fieldMap;
   const initialCheckersSquares = [
-    [0, 1, Colors.Black],
-    [0, 3, Colors.Black],
-    [0, 5, Colors.Black],
-    [0, 7, Colors.Black],
-    [1, 0, Colors.Black],
-    [1, 2, Colors.Black],
-    [1, 4, Colors.Black],
-    [1, 6, Colors.Black],
-    [2, 1, Colors.Black],
-    [2, 3, Colors.Black],
-    [2, 5, Colors.Black],
-    [2, 7, Colors.Black],
+    [0, 1, CheckersColors.Black],
+    [0, 3, CheckersColors.Black],
+    [0, 5, CheckersColors.Black],
+    [0, 7, CheckersColors.Black],
+    [1, 0, CheckersColors.Black],
+    [1, 2, CheckersColors.Black],
+    [1, 4, CheckersColors.Black],
+    [1, 6, CheckersColors.Black],
+    [2, 1, CheckersColors.Black],
+    [2, 3, CheckersColors.Black],
+    [2, 5, CheckersColors.Black],
+    [2, 7, CheckersColors.Black],
 
-    [5, 0, Colors.White],
-    [5, 2, Colors.White],
-    [5, 4, Colors.White],
-    [5, 6, Colors.White],
-    [6, 1, Colors.White],
-    [6, 3, Colors.White],
-    [6, 5, Colors.White],
-    [6, 7, Colors.White],
-    [7, 0, Colors.White],
-    [7, 2, Colors.White],
-    [7, 4, Colors.White],
-    [7, 6, Colors.White],
+    [5, 0, CheckersColors.White],
+    [5, 2, CheckersColors.White],
+    [5, 4, CheckersColors.White],
+    [5, 6, CheckersColors.White],
+    [6, 1, CheckersColors.White],
+    [6, 3, CheckersColors.White],
+    [6, 5, CheckersColors.White],
+    [6, 7, CheckersColors.White],
+    [7, 0, CheckersColors.White],
+    [7, 2, CheckersColors.White],
+    [7, 4, CheckersColors.White],
+    [7, 6, CheckersColors.White],
   ]
-  const initialCheckersPosition = initialCheckersSquares.map(([row, column, color]: any) => {
+  const initialCheckersPosition: Array<CheckersMapItemI> = initialCheckersSquares.map(([row, column, color]: any) => {
     const {posX, posY} = tmp[row][column];
-    return {posX, posY, color};
+    const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    const result: CheckersMapItemI = { posX, posY, color, id };
+    return result;
   })
   return initialCheckersPosition;
 }
@@ -97,11 +94,17 @@ export default function Board() {
   const [checkersMap, setCheckersMap] = useState<CheckersMap>([[]]);
   const [selectedSquare, setSelectedSquare] = useState<SquareI>({});
 
-  let movedCheckers: any = useRef([]); // todo
-  const setMovedCheckers = (value: any) => {
-    const tmp = JSON.parse(JSON.stringify(movedCheckers.current));
-    movedCheckers.current = value;
-    return tmp;
+
+  const handleCheckerMove = (args: { posX: number, posY: number, id: string }) => {
+    const { posX, posY, id } = args;
+    const checkerIndex = checkersMap
+      .findIndex((checker: any) => checker.id === id);
+    const { color }: any = checkersMap[checkerIndex];
+    setCheckersMap((prev) => {
+      const resultMap = JSON.parse(JSON.stringify(prev));
+      resultMap[checkerIndex] = { posX, posY, color, id };
+      return resultMap;
+    })
   }
 
   useEffect(() => {
@@ -130,16 +133,16 @@ export default function Board() {
           )}
         </React.Fragment>
       ))}
-      {checkersMap.map(({color, posX, posY}: any) => (
+      {checkersMap.map(({color, posX, posY, id}: any) => (
         <Checker 
           posX={posX}
           posY={posY}
+          id={id}
           color={color}
           size={size}
-          key={`${posX}_${posY}`}
+          key={id}
           selectedSquare={selectedSquare}
-          movedCheckers={movedCheckers.current}
-          setMovedCheckers={setMovedCheckers}
+          onCheckerMove={handleCheckerMove}
         />
       ))}
     </div>

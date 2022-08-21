@@ -11,7 +11,15 @@ type SquareProps = {
 };
 
 export default function Square(props: SquareProps) {
-  const { color, letter, number, size, posX, posY, setSelectedSquare } = props;
+  const { 
+    color,
+    letter,
+    number,
+    size,
+    posX,
+    posY,
+    setSelectedSquare 
+  } = props;
 
   const handleDragOver = (e: any) => {
     e.preventDefault();
