@@ -1,4 +1,5 @@
 import { useRef, } from "react";
+import { CheckersMap } from "../../../../types/checkers";
 import { getColumnIndexByPosX, getRowIndexByPosY } from "../../../../utils/coordinate-converter";
 import "./styles.scss";
 
@@ -9,6 +10,7 @@ type SquareProps = {
   id: string,
   size: number;
   selectedSquare: any,
+  checkersMap: CheckersMap,
   onCheckerMove: Function,
 };
 
@@ -20,6 +22,7 @@ export default function Checker(props: SquareProps) {
     posY,
     id,
     selectedSquare,
+    checkersMap,
     onCheckerMove
   } = props;
 
@@ -42,23 +45,44 @@ export default function Checker(props: SquareProps) {
     e.target.style.filter = 'opacity(1)';
 
     const el: any = selectedSquare.domEl;
-    const posX = Number(el.dataset.posX);
-    const posY = Number(el.dataset.posY);
+    const targetPosX = Number(el.dataset.posX);
+    const targetPosY = Number(el.dataset.posY);
 
-    const targetRow = getRowIndexByPosY({ size, posY })
-    const targetColumn = getColumnIndexByPosX({ size, posX })
+    const targetRow = getRowIndexByPosY({ size, posY: targetPosY })
+    const targetColumn = getColumnIndexByPosX({ size, posX: targetPosX })
 
     const rowDelta = targetRow - row;
     const columnDelta = targetColumn - column;
-    
-    if((rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1) && !el.dataset.checkerId) {
-      onCheckerMove({ posX, posY, id });
+
+    const gameMovedRules = [
+      (rowDelta === 2 || rowDelta === -2) && (columnDelta === 2 || columnDelta === -2),
+      (rowDelta === 1 || rowDelta === -1) && (columnDelta === 1 || columnDelta === -1)
+    ]
+
+    const selectedSquareHasChecker = checkersMap
+      .find((checker) => checker.row === targetRow && checker.column === targetColumn && checker.id !== id);
+
+    const sorroundingAvailableToEatCheckers = checkersMap
+      .map((sorroundingChecker) => 
+      ((sorroundingChecker.row === targetRow - 1 || sorroundingChecker.row === targetRow + 1) 
+        || (sorroundingChecker.column === targetColumn - 1 || sorroundingChecker.column === targetColumn + 1))
+          && sorroundingChecker.color !== color)
+
+    console.log(sorroundingAvailableToEatCheckers);
+
+    if(gameMovedRules.some((isSuccess) => isSuccess)) {
+      if(!selectedSquareHasChecker) {
+        if(
+          true
+        ) {
+          onCheckerMove({ posX: targetPosX, posY: targetPosY, row: targetRow, column: targetColumn, color, id });
+        }
+      }
     }
   }
 
   const handleDragLeave = (e: any) => {
-    const el: any = selectedSquare.domEl;
-    el.removeAttribute('data-checker-id');
+    e.preventDefault();
   }
 
   const handleDragOver = (e: any) => {

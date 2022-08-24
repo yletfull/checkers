@@ -1,14 +1,13 @@
 import "./styles.scss";
 import Square from "./components/Square";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getPosXByColumnIndex, getPosYByRowIndex } from "../../utils/coordinate-converter";
 import { useTypeSelector } from "../../hooks/useTypeSelector";
 import { OptionsState } from "../../types/options";
-import { Checker as CheckerI, Square as SquareI, CheckersColors, CheckersMapItemI } from "../../types/checkers";
+import { SelectedSquare as SelectedSquareI, CheckersColors, CheckersMapItemI, CheckersMap } from "../../types/checkers";
 import Checker from "./components/Checker";
 
 type FieldMap = Array<Array<any>>;
-type CheckersMap = Array<object>;
 
 const generateFieldMap = (height: number, width: number, size: number): FieldMap => {
   const rows: Array<any> = [];
@@ -79,9 +78,9 @@ const generateCheckersMap = (fieldMap: FieldMap): CheckersMap => {
     [7, 6, CheckersColors.White],
   ]
   const initialCheckersPosition: Array<CheckersMapItemI> = initialCheckersSquares.map(([row, column, color]: any) => {
-    const {posX, posY} = tmp[row][column];
+    const { posX, posY } = tmp[row][column];
     const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
-    const result: CheckersMapItemI = { posX, posY, color, id };
+    const result = { posX, posY, row, column, color, id };
     return result;
   })
   return initialCheckersPosition;
@@ -91,18 +90,17 @@ export default function Board() {
   const { size = 0 }: OptionsState = useTypeSelector((state) => state.options)
 
   const [fieldMap, setFieldMap] = useState<FieldMap>([[]]);
-  const [checkersMap, setCheckersMap] = useState<CheckersMap>([[]]);
-  const [selectedSquare, setSelectedSquare] = useState<SquareI>({});
+  const [checkersMap, setCheckersMap] = useState<CheckersMap>([]);
+  const [selectedSquare, setSelectedSquare] = useState<SelectedSquareI>({});
 
-
-  const handleCheckerMove = (args: { posX: number, posY: number, id: string }) => {
-    const { posX, posY, id } = args;
+  const handleCheckerMove = (args: { posX: number, posY: number, row: number, column: number, id: string }) => {
+    const { posX, posY, row, column, id } = args;
     const checkerIndex = checkersMap
       .findIndex((checker: any) => checker.id === id);
     const { color }: any = checkersMap[checkerIndex];
     setCheckersMap((prev) => {
       const resultMap = JSON.parse(JSON.stringify(prev));
-      resultMap[checkerIndex] = { posX, posY, color, id };
+      resultMap[checkerIndex] = { posX, posY, row, column, color, id };
       return resultMap;
     })
   }
@@ -142,6 +140,7 @@ export default function Board() {
           size={size}
           key={id}
           selectedSquare={selectedSquare}
+          checkersMap={checkersMap}
           onCheckerMove={handleCheckerMove}
         />
       ))}
